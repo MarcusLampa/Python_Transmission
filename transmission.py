@@ -64,6 +64,31 @@ def TractionPower(velocityTable, tractionForceTable):
     result = velocityTable * tractionForceTable / 3.6
     return result
 
+
+def StallTorqueRatio(gradient,
+                     mass,
+                     dynamicWheelRadius, 
+                     rollingResistanceCoefficient, 
+                     efficiency, 
+                     maxEngineTorque):
+
+    gravity = 9.81
+ 
+    result = (dynamicWheelRadius * mass * gravity * (rollingResistanceCoefficient * np.cos(np.arctan(gradient/100)) + \
+              np.sin(np.arctan(gradient/100)) )) / (maxEngineTorque * efficiency)
+
+    return result
+
+gradient = 50
+stallRatio = StallTorqueRatio(gradient,
+                              mass,
+                              dynamicWheelRadius, 
+                              rollingResistanceCoefficient, 
+                              efficiency, 
+                              maxEngineTorque)
+
+print(f"Stall torque ratio for: {gradient}% gradient is: {format(stallRatio, '.2f')}")
+
 tractionForceTable = TractionForce(engineTorque,
                                    dynamicWheelRadius,
                                    efficiency,
@@ -71,7 +96,7 @@ tractionForceTable = TractionForce(engineTorque,
 
 velocityTable = Velocity(engineSpeed, 
                          dynamicWheelRadius, 
-                         powertrainRatios) 
+                         powertrainRatios)
 
 tractionPowerTable = TractionPower(velocityTable, tractionForceTable)
 
