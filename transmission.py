@@ -1,10 +1,17 @@
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
+
+filePath = "D:\VSCode\Transmission\\"
+fileName = "myEngineMap_Lada.csv"
 
 # Engine Parameters:
-engineSpeed = [800, 2000, 3000, 4000, 4750, 5930, 6200]
-engineTorque = [115, 150, 170, 175, 189, 179, 170]
+#engineSpeed = [800, 2000, 3000, 4000, 4750, 5930, 6200]
+#engineTorque = [115, 150, 170, 175, 189, 179, 170]
+engineSpeed, engineTorque = np.loadtxt(filePath + fileName, delimiter=';', unpack=True)
+#engineSpeed = []
+#engineTorque = []
 maxEngineTorque = 189
 
 # Vehicle Parameters:
@@ -29,10 +36,21 @@ rollingResistanceCoefficient = 0.0124
 rollingResistanceCoefficientList = np.array([0.0124, 0.0124, 0.0124, 0.0124, 0.0124, 0.0124, 0.0125, 0.0127, 0.0128, 0.0130, 0.0131, 0.0134, 0.0136, 0.0139, 0.0142, 0.0145, 0.0155, 0.0165, 0.0176, 0.0188, 0.0200, 0.0221, 0.0244, 0.0270, 0.0299, 0.0325, 0.0352, 0.0379, 0.0406, 0.0434, 0.0461])
 airDensity = 1.1990
 
+
 # Calculate input variables:
 finalRatio = transferBoxRatio * axleDriveRatio * hubDriveRatio
 transmissionRatios = np.array(gearRatios) * rangeUnitRatio
 powertrainRatios = transmissionRatios * finalRatio
+
+def LoadEngineMap(fileName, filePath, char=';'):
+
+    with open(filePath + fileName, 'r') as csvFile:
+        table = csv.reader(csvFile, delimiter=char)
+        for row in table:
+            engineSpeed.append(float(row[0]))
+            engineTorque.append(float(row[1]))
+
+    return engineSpeed, engineTorque
 
 def TractionForce(engineTorque,
                   dynamicWheelRadius,
@@ -113,6 +131,8 @@ def DrivingResistance(mass,
 
     return result, velocity
 
+#engineSpeed, engineTorque = LoadEngineMap(fileName, filePath)
+
 drivingResistanceTable, vel = DrivingResistance(mass,
                       airDensity,
                       rollingResistanceCoefficientList,
@@ -151,7 +171,7 @@ print(drivingResistanceTable.shape)
 
 # create definition for ploting
 gears = ["1st Gear" , "2nd Gear", "3rd Gear", "4th Gear", "5th Gear"]
-gradientLabels = ["0% grad" , "10% grad", "20%", "30%", "40%"]
+gradientLabels = ["0%  grad" , "10% grad", "20% grad", "30% grad", "40% grad"]
 plt.subplot(121)
 plt.plot(velocityTable, tractionForceTable)
 fig = plt.plot(vel*3.6, drivingResistanceTable) 
@@ -165,7 +185,7 @@ plt.subplot(122)
 plt.plot(velocityTable, tractionPowerTable)
 plt.xlabel('Velosity [km/h]')
 plt.ylabel('Power [kW]')
-plt.title('Traction Power Diagram')
+plt.title('Power Diagram')
 plt.legend(gears) 
 
 #plt.legend(gears, loc='upper right')
