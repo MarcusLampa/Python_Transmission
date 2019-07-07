@@ -55,7 +55,7 @@ def Velocity(engineSpeed,
              dynamicWheelRadius,
              powertrainRatios):
 
-    n = len(engineSpeed)        # Calculate the number of rows
+    n = len(engineSpeed)       # Calculate the number of rows
     m = len(powertrainRatios)  # Calculate the number of columns
     result = np.zeros((n, m))
 
@@ -84,7 +84,6 @@ def StallTorqueRatio(gradient,
               np.sin(np.arctan(gradient/100)) )) / (maxEngineTorque * efficiency)
 
     return result
-
     
 def DrivingResistance(mass,
                       airDensity,
@@ -94,15 +93,14 @@ def DrivingResistance(mass,
                       crossSection, 
                       maxVelocity):
 
-
+    gravity = 9.81
     velocity = np.arange(0, maxVelocity, 10) / 3.6 # Dose not include maxVelocity, only upp to
     n = len(velocity) # Number of rows
     m = len(roadGradients) # Number of columns
     
-    gravity = 9.81
     airResistance = np.zeros((n, 1))
     rollinResistance = np.zeros((n, 1))
-    drivingResistance = np.zeros((n, m))
+    result = np.zeros((n, m))
  
         #accelerationResistance = rotationalInertiaCoefficient * vehicleMass * acceleration #Add function and dimmed "error field" om plot?
  
@@ -111,11 +109,11 @@ def DrivingResistance(mass,
         gradientResistance = mass * gravity * np.sin( roadGradients[i] / 100 )
         rollinResistance = rollingResistanceCoefficientList[:n] * mass * gravity * np.cos( roadGradients[i] / 100 )
         airResistance = 0.5 * airDensity * dragCoefficient * crossSection * (velocity ** 2)
-        drivingResistance[:, i] = (airResistance + rollinResistance + gradientResistance) * (1/1000)         #+ accelerationResistance;
+        result[:, i] = (airResistance + rollinResistance + gradientResistance) * (1/1000)         #+ accelerationResistance;
 
-    return drivingResistance
+    return result, velocity
 
-drivingResistanceTable = DrivingResistance(mass,
+drivingResistanceTable, vel = DrivingResistance(mass,
                       airDensity,
                       rollingResistanceCoefficientList,
                       roadGradients,
@@ -145,18 +143,35 @@ velocityTable = Velocity(engineSpeed,
 tractionPowerTable = TractionPower(velocityTable, tractionForceTable)
 
 np.set_printoptions(precision=2)
-#print(tractionForceTable)
+print(tractionForceTable.shape)
 #print(tractionPowerTable)
-print(drivingResistanceTable)
+print(drivingResistanceTable.shape)
 #print(velocityTable)
 
+
+# create definition for ploting
 gears = ["1st Gear" , "2nd Gear", "3rd Gear", "4th Gear", "5th Gear"]
-fig, ax = plt.subplots()
-ax.plot(velocityTable, tractionForceTable)
+gradientLabels = ["0% grad" , "10% grad", "20%", "30%", "40%"]
+plt.subplot(121)
+plt.plot(velocityTable, tractionForceTable)
+fig = plt.plot(vel*3.6, drivingResistanceTable) 
+plt.setp(fig, color='k', linestyle='--', linewidth=0.5)
+plt.legend(gears + gradientLabels, loc='upper right') 
+plt.xlabel('Velosity [km/h]')
+plt.ylabel('Traction [kN]')
+plt.title('Traction Force Diagram')
+plt.subplot(122)
 
-ax.legend(gears, loc='upper right')
-ax.set(xlabel='Velocity [km/h]', ylabel='Traction [kN]',
-       title='Traction force diagram')
+plt.plot(velocityTable, tractionPowerTable)
+plt.xlabel('Velosity [km/h]')
+plt.ylabel('Power [kW]')
+plt.title('Traction Power Diagram')
+plt.legend(gears) 
 
-fig.savefig("TractionForceDiagram.png")
+#plt.legend(gears, loc='upper right')
+#plt.set(xlabel='Velocity [km/h]', ylabel='Traction [kN]',
+#       title='Traction force diagram')
+
+#fig.savefig("TractionForceDiagram.png")
+
 plt.show()
