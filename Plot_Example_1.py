@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt 
 import matplotlib.image as mpimg
-
+from matplotlib import style
 
 
 slices = [7,2,3,4]
 labelList = ["label1", "label2", "label3", "label4"]
 colorLists = ['c', 'm', 'r', 'b']
 
-# -------------------------------------------Methode 1-------------------------------------------
+# ------------------------------------------- Example #1 -------------------------------------------
 '''
 plt.pie(slices, startangle=45,
                 labels=labelList, 
@@ -18,13 +18,13 @@ plt.pie(slices, startangle=45,
 
 plt.show()
 '''
-# -------------------------------------------Methode 2-------------------------------------------
+# ------------------------------------------- Fill Between -------------------------------------------
 x = [800, 2000, 3000, 4000, 4750, 5930, 6200]
 
 y1 = [115, 150, 170, 175, 189, 179, 170]
 y2 = [95, 140, 180, 185, 169, 175, 160]
 
-
+style.use('dark_background')
 
 fig = plt.figure()
 ax1 = plt.subplot2grid((1,1), (0,0))
@@ -42,9 +42,6 @@ ax1.spines['left'].set_linewidth(5)
 
 ax1.spines['top'].set_visible(False)
 
-
-
-
 for label in ax1.xaxis.get_ticklabels():
     label.set_rotation(45)
 
@@ -60,7 +57,7 @@ plt.title('Torque vs Speed')
 plt.legend()
 plt.subplots_adjust(left=0.2, right=0.8, top=0.8, bottom=0.2, wspace=0.2, hspace=0.2) # % left to right och % bottom to top
 '''
-# ------------------------------------------- add image -------------------------------------------
+# ------------------------------------------- Add Image -------------------------------------------
 #https://stackoverflow.com/questions/3003108/adding-a-small-photo-image-to-a-large-graph-in-matplotlib-python
 
 img = mpimg.imread('D:\VSCode\Transmission\scania.png')
@@ -69,7 +66,7 @@ img = mpimg.imread('D:\VSCode\Transmission\scania.png')
 plt.imshow(img, extent=[0, 0.2, 0.8, 0], aspect=3,  cmap='hot')
 plt.colorbar()
 
-# ------------------------------------------- add image -------------------------------------------
+# ------------------------------------------- Add Image -------------------------------------------
 '''
 
 
