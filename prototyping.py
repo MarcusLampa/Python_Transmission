@@ -78,3 +78,17 @@ res = DrivingResistance(mass,
                       crossSection, 
                       251)
 print(res)
+
+
+
+# create definition for ploting
+gears = ["1st Gear" , "2nd Gear", "3rd Gear", "4th Gear", "5th Gear"]
+fig, ax = plt.subplots(121)
+ax.plot(velocityTable, tractionForceTable)
+
+ax.legend(gears, loc='upper right')
+ax.set(xlabel='Velocity [km/h]', ylabel='Traction [kN]',
+       title='Traction force diagram')
+
+fig.savefig("TractionForceDiagram.png")
+plt.show()
