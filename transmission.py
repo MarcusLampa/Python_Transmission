@@ -3,13 +3,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 
-filePath = "D:\VSCode\Transmission\\"
-fileName = "myEngineMap_Lada.csv"
+#filePath = "D:\VSCode\Transmission\\"
+print("\nImport a comma ';' separated\n.txt or .csv file.\n")
+print("|Engine Speed|Engine Torque|\n|   2000.00  ;  100.00     |\n|      ...   ;    ...      |\n")
+fileName = input("Enter: <FileName>.CSV >> ")
 
 # Engine Parameters:
 #engineSpeed = [800, 2000, 3000, 4000, 4750, 5930, 6200]
 #engineTorque = [115, 150, 170, 175, 189, 179, 170]
-engineSpeed, engineTorque = np.loadtxt(filePath + fileName, delimiter=';', unpack=True)
+engineSpeed, engineTorque = np.loadtxt(fileName, delimiter=';', unpack=True)
 #engineSpeed = []
 #engineTorque = []
 maxEngineTorque = 189
@@ -149,7 +151,7 @@ stallRatio = StallTorqueRatio(gradient,
                               efficiency, 
                               maxEngineTorque)
 
-print(f"Stall torque ratio for: {gradient}% gradient is: {format(stallRatio, '.2f')}")
+print(f"\nStall torque ratio for: {gradient}% gradient is: {format(stallRatio, '.2f')}")
 
 tractionForceTable = TractionForce(engineTorque,
                                    dynamicWheelRadius,
@@ -163,9 +165,9 @@ velocityTable = Velocity(engineSpeed,
 tractionPowerTable = TractionPower(velocityTable, tractionForceTable)
 
 np.set_printoptions(precision=2)
-print(tractionForceTable.shape)
+#print(tractionForceTable.shape)
 #print(tractionPowerTable)
-print(drivingResistanceTable.shape)
+#print(drivingResistanceTable.shape)
 #print(velocityTable)
 
 
@@ -195,3 +197,4 @@ plt.legend(gears)
 #fig.savefig("TractionForceDiagram.png")
 
 plt.show()
+k = input("press any key to exit")
