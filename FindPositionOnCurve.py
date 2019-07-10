@@ -1,5 +1,5 @@
 #engineSpeed = [800, 2000, 3000, 4000, 4750, 5930, 6200]
-curve = [115, 150, 170, 175, 189, 200, 221, 245, 263, 278, 303, 324, 368, 385, 412]
+curve = [115, 150, 170, 175, 189, 200, 221, 245, 263, 278, 303, 324, 368, 385, 412, 420, 450, 468, 489, 502, 512, 538, 568, 604, 635, 689, 701, 712, 734, 745]
 
 
 def FindPositionOnCurve(curve, ratio = 0.5):
@@ -7,7 +7,6 @@ def FindPositionOnCurve(curve, ratio = 0.5):
     testIndex = round(len(curve) / 2)
     offset = testIndex 
     targetValue = curve[0] + (curve[-1] - curve[0]) * ratio
-    print(f"Target value: {targetValue}")
     counter = 0
     isLocated = False
     result = [0, 0]
@@ -57,7 +56,7 @@ def FindPositionOnCurve(curve, ratio = 0.5):
     return result
     
 
-x1, x2 = FindPositionOnCurve(curve, 1)
+x1, x2 = FindPositionOnCurve(curve, 0.65)
 
 print(curve[x1])
 print(curve[x2])
